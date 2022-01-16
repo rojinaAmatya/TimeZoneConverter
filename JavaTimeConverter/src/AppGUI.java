@@ -6,14 +6,18 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.awt.event.ActionEvent;
 
 public class AppGUI {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField hourLeft;
+	private JTextField minuteLeft;
+	private JTextField hourRight;
+	private JTextField minuteRight;
 
 	/**
 	 * Launch the application.
@@ -48,25 +52,31 @@ public class AppGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		textField = new JTextField();
-		textField.setBounds(40, 151, 130, 26);
-		frame.getContentPane().add(textField);
-		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(191, 151, 130, 26);
-		frame.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		//https://timezonedb.com/time-zones
+		String[] countryName = {"America/argentina/Buenos_Aires","Australia/Sydney","America/Toronto","Asia/Shanghai","Africa/Cairo","Europe/Rome"
+						,"India/Maldives"};
+		int[] offSets = {-3,10,-4,8,2,2,2,5};
+				
+		hourLeft = new JTextField();
+		hourLeft.setBounds(40, 151, 130, 26);
+		frame.getContentPane().add(hourLeft);
+		hourLeft.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(408, 151, 130, 26);
-		frame.getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		minuteLeft = new JTextField();
+		minuteLeft.setBounds(191, 151, 130, 26);
+		frame.getContentPane().add(minuteLeft);
+		minuteLeft.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(573, 151, 130, 26);
-		frame.getContentPane().add(textField_3);
-		textField_3.setColumns(10);
+		hourRight = new JTextField();
+		hourRight.setBounds(408, 151, 130, 26);
+		frame.getContentPane().add(hourRight);
+		hourRight.setColumns(10);
+		
+		minuteRight = new JTextField();
+		minuteRight.setBounds(573, 151, 130, 26);
+		frame.getContentPane().add(minuteRight);
+		minuteRight.setColumns(10);
 		
 		JLabel lblFrom = new JLabel("From");
 		lblFrom.setBounds(52, 123, 61, 16);
@@ -76,14 +86,51 @@ public class AppGUI {
 		lblTo.setBounds(418, 123, 61, 16);
 		frame.getContentPane().add(lblTo);
 		
+		JComboBox comboBoxLeft = new JComboBox(countryName);
+		comboBoxLeft.setBounds(61, 196, 228, 26);
+		frame.getContentPane().add(comboBoxLeft);
+		
+		JComboBox comboBoxRight = new JComboBox(countryName);
+		comboBoxRight.setBounds(437, 196, 234, 26);
+		frame.getContentPane().add(comboBoxRight);
+		
 		JButton btnConvert = new JButton("Convert");
+		btnConvert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int hours = Integer.parseInt(hourLeft.getText());
+				int mins = Integer.parseInt(minuteLeft.getText());
+				
+				String selection1 = (String)comboBoxLeft.getSelectedItem();
+				String selection2 = (String)comboBoxRight.getSelectedItem();
+				
+				int positions1 = Arrays.asList(countryName).indexOf(selection1);
+				int positions2 = Arrays.asList(countryName).indexOf(selection2);
+				
+				int timeDiff = offSets[positions2] - offSets[positions1]; 
+				
+				if((timeDiff + hours) < 0) {
+					hours += 24;
+				}
+				hourRight.setText(Integer.toString((hours + timeDiff)%24));
+				minuteRight.setText(Integer.toString(mins));
+				
+				
+			}
+		});
+		
+		
 		btnConvert.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
-		btnConvert.setBounds(308, 221, 117, 41);
+		btnConvert.setBounds(305, 263, 117, 41);
 		frame.getContentPane().add(btnConvert);
 		
 		JLabel lblTimeConverter = new JLabel("Time Zone Converter");
 		lblTimeConverter.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		lblTimeConverter.setBounds(288, 66, 168, 16);
 		frame.getContentPane().add(lblTimeConverter);
+		
+		
+		
+		
+		
 	}
 }
