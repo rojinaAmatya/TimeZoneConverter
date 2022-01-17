@@ -66,7 +66,7 @@ public class AppGUI {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char charRead = e.getKeyChar();
-				if (!Character.isDigit(charRead)) {
+				if (!Character.isDigit(charRead) || charRead == KeyEvent.VK_BACK_SPACE) {
 					e.consume();
 				}
 			}
@@ -80,7 +80,7 @@ public class AppGUI {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char charRead = e.getKeyChar();
-				if (!Character.isDigit(charRead)) {
+				if (!Character.isDigit(charRead) || charRead == KeyEvent.VK_BACK_SPACE) {
 					e.consume();
 				}
 			}
