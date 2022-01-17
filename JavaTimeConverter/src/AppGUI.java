@@ -11,6 +11,8 @@ import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AppGUI {
 
@@ -60,11 +62,29 @@ public class AppGUI {
 		int[] offSets = {-3,10,-4,8,2,2,2,5};
 				
 		hourLeft = new JTextField();
+		hourLeft.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char charRead = e.getKeyChar();
+				if (!Character.isDigit(charRead)) {
+					e.consume();
+				}
+			}
+		});
 		hourLeft.setBounds(40, 151, 130, 26);
 		frame.getContentPane().add(hourLeft);
 		hourLeft.setColumns(10);
 		
 		minuteLeft = new JTextField();
+		minuteLeft.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char charRead = e.getKeyChar();
+				if (!Character.isDigit(charRead)) {
+					e.consume();
+				}
+			}
+		});
 		minuteLeft.setBounds(210, 151, 130, 26);
 		frame.getContentPane().add(minuteLeft);
 		minuteLeft.setColumns(10);
