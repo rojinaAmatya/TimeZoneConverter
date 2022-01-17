@@ -64,7 +64,7 @@ public class AppGUI {
 		hourLeft.setColumns(10);
 		
 		minuteLeft = new JTextField();
-		minuteLeft.setBounds(191, 151, 130, 26);
+		minuteLeft.setBounds(210, 151, 130, 26);
 		frame.getContentPane().add(minuteLeft);
 		minuteLeft.setColumns(10);
 		
@@ -94,6 +94,10 @@ public class AppGUI {
 		comboBoxRight.setBounds(437, 196, 234, 26);
 		frame.getContentPane().add(comboBoxRight);
 		
+		JLabel notification = new JLabel("");
+		notification.setBounds(488, 133, 117, 16);
+		frame.getContentPane().add(notification);
+		
 		JButton btnConvert = new JButton("Convert");
 		btnConvert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -109,8 +113,17 @@ public class AppGUI {
 				int timeDiff = offSets[positions2] - offSets[positions1]; 
 				
 				if((timeDiff + hours) < 0) {
+					notification.setText("One day before");
 					hours += 24;
 				}
+				else if ((timeDiff + hours) >= 24){
+					notification.setText("One day ahead");
+					
+				}
+				else {
+					notification.setText("Same day");
+				}
+				
 				hourRight.setText(Integer.toString((hours + timeDiff)%24));
 				minuteRight.setText(Integer.toString(mins));
 				
@@ -127,6 +140,8 @@ public class AppGUI {
 		lblTimeConverter.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		lblTimeConverter.setBounds(288, 66, 168, 16);
 		frame.getContentPane().add(lblTimeConverter);
+		
+		
 		
 		
 		
