@@ -4,12 +4,15 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AppGUI {
 
@@ -59,12 +62,30 @@ public class AppGUI {
 		int[] offSets = {-3,10,-4,8,2,2,2,5};
 				
 		hourLeft = new JTextField();
+		hourLeft.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char charRead = e.getKeyChar();
+				if (!Character.isDigit(charRead) || charRead == KeyEvent.VK_BACK_SPACE || hourLeft.getText().length()>=2) {
+					e.consume();
+				}
+			}
+		});
 		hourLeft.setBounds(40, 151, 130, 26);
 		frame.getContentPane().add(hourLeft);
 		hourLeft.setColumns(10);
 		
 		minuteLeft = new JTextField();
-		minuteLeft.setBounds(191, 151, 130, 26);
+		minuteLeft.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char charRead = e.getKeyChar();
+				if (!Character.isDigit(charRead) || charRead == KeyEvent.VK_BACK_SPACE || minuteLeft.getText().length()>=2) {
+					e.consume();
+				}
+			}
+		});
+		minuteLeft.setBounds(210, 151, 130, 26);
 		frame.getContentPane().add(minuteLeft);
 		minuteLeft.setColumns(10);
 		
@@ -94,28 +115,47 @@ public class AppGUI {
 		comboBoxRight.setBounds(437, 196, 234, 26);
 		frame.getContentPane().add(comboBoxRight);
 		
+		JLabel notification = new JLabel("");
+		notification.setBounds(488, 133, 117, 16);
+		frame.getContentPane().add(notification);
+		
 		JButton btnConvert = new JButton("Convert");
 		btnConvert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int hours = Integer.parseInt(hourLeft.getText());
-				int mins = Integer.parseInt(minuteLeft.getText());
-				
-				String selection1 = (String)comboBoxLeft.getSelectedItem();
-				String selection2 = (String)comboBoxRight.getSelectedItem();
-				
-				int positions1 = Arrays.asList(countryName).indexOf(selection1);
-				int positions2 = Arrays.asList(countryName).indexOf(selection2);
-				
-				int timeDiff = offSets[positions2] - offSets[positions1]; 
-				
-				if((timeDiff + hours) < 0) {
-					hours += 24;
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					int hours = Integer.parseInt(hourLeft.getText());
+					int mins = Integer.parseInt(minuteLeft.getText());
+
+					String selection1 = (String)comboBoxLeft.getSelectedItem();
+					String selection2 = (String)comboBoxRight.getSelectedItem();
+
+					int positions1 = Arrays.asList(countryName).indexOf(selection1);
+					int positions2 = Arrays.asList(countryName).indexOf(selection2);
+
+					int timeDiff = offSets[positions2] - offSets[positions1]; 
+
+					if((timeDiff + hours) < 0) {
+						notification.setText("One day before");
+						hours += 24;
+					}
+					else if ((timeDiff + hours) >= 24){
+						notification.setText("One day ahead");
+
+					}
+					else {
+						notification.setText("Same day");
+					}
+
+					hourRight.setText(Integer.toString((hours + timeDiff)%24));
+					minuteRight.setText(Integer.toString(mins));
 				}
-				hourRight.setText(Integer.toString((hours + timeDiff)%24));
-				minuteRight.setText(Integer.toString(mins));
 				
-				
+				catch(Exception e) {
+					JOptionPane.showMessageDialog(frame," Invalid Input!");
+				}
 			}
+				
+			 
 		});
 		
 		
@@ -127,6 +167,8 @@ public class AppGUI {
 		lblTimeConverter.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		lblTimeConverter.setBounds(288, 66, 168, 16);
 		frame.getContentPane().add(lblTimeConverter);
+		
+		
 		
 		
 		
