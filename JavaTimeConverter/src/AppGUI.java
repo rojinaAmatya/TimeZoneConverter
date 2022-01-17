@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -100,35 +101,41 @@ public class AppGUI {
 		
 		JButton btnConvert = new JButton("Convert");
 		btnConvert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int hours = Integer.parseInt(hourLeft.getText());
-				int mins = Integer.parseInt(minuteLeft.getText());
-				
-				String selection1 = (String)comboBoxLeft.getSelectedItem();
-				String selection2 = (String)comboBoxRight.getSelectedItem();
-				
-				int positions1 = Arrays.asList(countryName).indexOf(selection1);
-				int positions2 = Arrays.asList(countryName).indexOf(selection2);
-				
-				int timeDiff = offSets[positions2] - offSets[positions1]; 
-				
-				if((timeDiff + hours) < 0) {
-					notification.setText("One day before");
-					hours += 24;
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					int hours = Integer.parseInt(hourLeft.getText());
+					int mins = Integer.parseInt(minuteLeft.getText());
+
+					String selection1 = (String)comboBoxLeft.getSelectedItem();
+					String selection2 = (String)comboBoxRight.getSelectedItem();
+
+					int positions1 = Arrays.asList(countryName).indexOf(selection1);
+					int positions2 = Arrays.asList(countryName).indexOf(selection2);
+
+					int timeDiff = offSets[positions2] - offSets[positions1]; 
+
+					if((timeDiff + hours) < 0) {
+						notification.setText("One day before");
+						hours += 24;
+					}
+					else if ((timeDiff + hours) >= 24){
+						notification.setText("One day ahead");
+
+					}
+					else {
+						notification.setText("Same day");
+					}
+
+					hourRight.setText(Integer.toString((hours + timeDiff)%24));
+					minuteRight.setText(Integer.toString(mins));
 				}
-				else if ((timeDiff + hours) >= 24){
-					notification.setText("One day ahead");
-					
+				
+				catch(Exception e) {
+					JOptionPane.showMessageDialog(frame," Invalid Input!");
 				}
-				else {
-					notification.setText("Same day");
-				}
-				
-				hourRight.setText(Integer.toString((hours + timeDiff)%24));
-				minuteRight.setText(Integer.toString(mins));
-				
-				
 			}
+				
+			 
 		});
 		
 		
